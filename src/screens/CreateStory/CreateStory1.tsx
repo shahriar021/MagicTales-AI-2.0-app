@@ -1,15 +1,21 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput, Image } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, TextInput, Image, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import * as Progress from "react-native-progress";
-import InputSelectPicker from 'src/components/ui/homepage/InputSelectPicker';
+import { useDispatch } from 'react-redux';
+import { setHeroDetails } from "src/redux/features/storyPromt/storyPromtSlice"
+import { useAppSelector } from 'src/redux/hooks';
 
 const CreateStory1 = () => {
     const navigation = useNavigation()
+    const [childName, setChildName] = useState('')
+    const [age, setAge] = useState('')
     const [selectPronoun, isSelectPronoun] = useState("she/her");
     const [fovourite, isFovourite] = useState("Cat");
     const [fovouriteColor, isFovouriteColor] = useState("They/them");
+
+    const dispatch = useDispatch()
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -30,6 +36,23 @@ const CreateStory1 = () => {
         });
     }, [navigation])
 
+    const handleNext = () => {
+        if(!childName || !age || !selectPronoun || !fovourite || !fovouriteColor){
+            Alert.alert("Please choose all the fields!");
+            return;
+        }
+        dispatch(setHeroDetails({
+            child_name: childName,
+            age: age, 
+            pronouns: selectPronoun,
+            favorite_animal: fovourite,
+            favorite_color: fovouriteColor,
+        }))
+        navigation.navigate("create story 2")
+    }
+
+
+
 
     return (
         <View className='p-3 flex-1'>
@@ -44,12 +67,12 @@ const CreateStory1 = () => {
 
                 <View className='w-full'>
                     <Text className='font-interMedium mt-2 mb-2'>Childs Name</Text>
-                    <TextInput className='border p-3 rounded-lg border-gray-400' placeholder='Enter Name' />
+                    <TextInput className='border p-3 rounded-lg border-gray-400' placeholder='Enter Name' onChangeText={setChildName}/>
                 </View>
                 <View className='w-full mt-2 mb-2'>
                     <Text className='font-interMedium mt-2 mb-2'>Age</Text>
 
-                    <TextInput className='border p-3 rounded-lg border-gray-400' placeholder='Enter Age' />
+                    <TextInput className='border p-3 rounded-lg border-gray-400' placeholder='Enter Age' onChangeText={setAge}/>
 
 
                 </View>
@@ -128,7 +151,7 @@ const CreateStory1 = () => {
 
             <View className='flex-row gap-3 mt-4 mb-10'>
                 <TouchableOpacity className='flex-1 items-center bg-white border p-3 rounded-lg border-purple-300'><Text className='text-black'>Back</Text></TouchableOpacity>
-                <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={() => navigation.navigate("create story 2")}><Text className='text-white'>Next</Text></TouchableOpacity>
+                <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleNext}><Text className='text-white'>Next</Text></TouchableOpacity>
             </View>
 
         </View>

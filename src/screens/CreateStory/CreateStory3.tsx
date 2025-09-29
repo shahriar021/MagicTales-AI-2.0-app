@@ -1,13 +1,18 @@
 import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import * as Progress from "react-native-progress";
-import { scale, verticalScale } from 'react-native-size-matters';
+import { scale } from 'react-native-size-matters';
 import { storyCards } from './demo';
+import { useDispatch } from 'react-redux';
+import { setArtStyle } from 'src/redux/features/storyPromt/storyPromtSlice';
 
 const CreateStory3 = () => {
   const navigation = useNavigation()
+  const [artStyle,setArtStyleState]=useState('');
+
+  const dispatch=useDispatch();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -18,7 +23,7 @@ const CreateStory3 = () => {
         borderBottomWidth: 0,
       },
       headerTitle: "New Story",
-      headerTitleAlign:"center",
+      headerTitleAlign: "center",
       headerTintColor: "black",
       headerLeft: () => (
         <TouchableOpacity className='flex-row gap-2 items-center p-3' onPress={() => navigation.goBack()}>
@@ -27,6 +32,12 @@ const CreateStory3 = () => {
       )
     });
   }, [navigation])
+
+  const handleNext=()=>{
+    dispatch(setArtStyle(artStyle))
+
+    navigation.navigate("create story 4")
+  }
 
   return (
     <View className='p-3 flex-1 bg-[#f2f2f2]'>
@@ -41,12 +52,12 @@ const CreateStory3 = () => {
 
         <View>
 
-          {storyCards.map(item => <View key={item.title} className='bg-[#fff] p-3 items-center rounded-xl overflow-hidden gap-2 mt-2 mb-2' style={{ width: scale(300) }}>
+          {storyCards.map(item => <TouchableOpacity key={item.title} className='bg-[#fff] p-3 items-center rounded-xl overflow-hidden gap-2 mt-2 mb-2' style={{ width: scale(300) }} onPress={()=>setArtStyleState(item.title)}>
             <Image source={item.image} />
 
             <Text className='text-[#1F2937] font-interSemiBold text-xl '>{item.title}</Text>
             <Text className='text-[#6B7280] font-interMedium'>{item.detail}</Text>
-          </View>)}
+          </TouchableOpacity>)}
 
         </View>
 
@@ -55,7 +66,7 @@ const CreateStory3 = () => {
 
       <View className='flex-row gap-3 mt-4 mb-10'>
         <TouchableOpacity className='flex-1 items-center bg-white border p-3 rounded-lg border-purple-300'><Text className='text-black'>Back</Text></TouchableOpacity>
-        <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={() => navigation.navigate("create story 4")}><Text className='text-white'>Next</Text></TouchableOpacity>
+        <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleNext}><Text className='text-white'>Next</Text></TouchableOpacity>
       </View>
 
 

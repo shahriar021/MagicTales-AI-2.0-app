@@ -5,17 +5,37 @@ import React, { useLayoutEffect, useState } from "react"
 import { Image, ScrollView, Text, TextInput, TextInputBase, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { scale, verticalScale } from "react-native-size-matters"
+import { useSignUpMutation } from "src/redux/features/auth/authApi"
 export const selectedCountry = {
     flag: require('../../../assets/e-icon/bdFlag.jpg'),
     dialCode: '+880',
 };
 
 const SignUpUser = () => {
+    const [signupData]=useSignUpMutation();
 
     const navigation = useNavigation()
 
     const [isShowPassword, setIsShowPassword] = useState(false)
+    const [userName,setUserName]=useState('')
+    const [email,setEmail]=useState('')
+    const [password,setPassword]=useState('')
 
+
+    const handleSignUp=async()=>{
+        const info={
+            userName,
+            email,
+            password
+        }
+        console.log(info)
+        try{
+            const res = await signupData(info).unwrap()
+            console.log(res)
+        }catch(err){
+            console.log(err)
+        }
+    }
 
     return (
         <LinearGradient
@@ -40,15 +60,15 @@ const SignUpUser = () => {
                     <View className="mt-4 w-full p-5">
 
                         <View className="flex-row justify-between items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-white">
-                            <TextInput placeholder="Full Name" placeholderTextColor={"#ADAEBC"} style={{flex:1}}/>
+                            <TextInput placeholder="Full Name" placeholderTextColor={"#ADAEBC"} style={{flex:1}} onChangeText={setUserName}/>
                         </View>
 
                         <View className="flex-row justify-between items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-white">
-                            <TextInput placeholder="Email" placeholderTextColor={"#ADAEBC"} style={{flex:1}}/>
+                            <TextInput placeholder="Email" placeholderTextColor={"#ADAEBC"} style={{flex:1}} onChangeText={setEmail}/>
                         </View>
 
                         <View className="flex-row justify-between items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-white">
-                            <TextInput placeholder="Password" placeholderTextColor={"#ADAEBC"} style={{flex:1}}/>
+                            <TextInput placeholder="Password" placeholderTextColor={"#ADAEBC"} style={{flex:1}} onChangeText={setPassword}/>
                             <Image source={require("../../../assets/magic/i.png")} />
                         </View>
 
@@ -59,7 +79,7 @@ const SignUpUser = () => {
                             <Text className="text-center">I confirm I am 13+ or have a parent/guardian's consent, and I agree to the <Text className="text-[#9333EA]">Terms</Text> and <Text className="text-[#9333EA]">Privacy Policy</Text> .</Text>
                         </View>
 
-                        <TouchableOpacity className="mt-5 mb-2  w-full items-center overflow-hidden rounded-2xl" onPress={() => navigation.navigate("Choose Plan")}>
+                        <TouchableOpacity className="mt-5 mb-2  w-full items-center overflow-hidden rounded-2xl" onPress={handleSignUp}>
                             <LinearGradient colors={["#9333EA", "#EC4899"]} start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 1 }} style={{ width: "100%", padding: 15 }} className="w-full items-center p-3">
                                 <Text className="text-white text-lg font-interSemiBold text-center">Create Account</Text>

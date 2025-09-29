@@ -1,15 +1,17 @@
-import { AntDesign, Feather, Ionicons } from "@expo/vector-icons"
+import { Ionicons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
 import { LinearGradient } from "expo-linear-gradient"
-import React, { useLayoutEffect, useState } from "react"
+import React, { useState } from "react"
 import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { scale, verticalScale } from "react-native-size-matters"
 import { useDispatch } from "react-redux"
-import { setToken, setUserType } from "src/redux/features/auth/authSlice";
+import { useLoginMutation } from "src/redux/features/auth/authApi"
+import { setToken } from "src/redux/features/auth/authSlice";
+
 
 const LoginScreen = () => {
-
+    const [loginData] = useLoginMutation()
     const navigation = useNavigation()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -21,13 +23,12 @@ const LoginScreen = () => {
 
     const dispatch = useDispatch();
 
-
     const validateEmail = (email: any) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
 
 
         if (!email.trim()) {
@@ -49,7 +50,21 @@ const LoginScreen = () => {
             Alert.alert("Error", "Password must be at least 6 characters long");
             return;
         }
-        dispatch(setToken(true));
+        const info = {
+            email,
+            password
+        }
+        try {
+            const res = await loginData(info).unwrap()
+            if (res?.success == true) {
+                Alert.alert("Login Successfull!")
+                dispatch(setToken(res?.data?.access))
+            } else {
+                Alert.alert("Something went wrong!")
+            }
+        } catch (err: any) {
+            Alert.alert(err?.data?.message)
+        }
     };
 
     return (
@@ -86,8 +101,8 @@ const LoginScreen = () => {
                         <View className="flex-row justify-between items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-white">
                             <TextInput placeholder="Enter your password" placeholderTextColor={"#ADAEBC"} onChangeText={(text) => setPassword(text)} value={password} style={{ flex: 1, paddingVertical: 8, paddingLeft: 12, color: "#000" }} secureTextEntry={!isPasswordVisible} />
                             <TouchableOpacity onPress={togglePasswordVisibility} style={{ paddingLeft: 10 }}>
-        <Ionicons name={isPasswordVisible ? 'eye-off' : 'eye'} size={24} color="#8B5CF6" />
-      </TouchableOpacity>
+                                <Ionicons name={isPasswordVisible ? 'eye-off' : 'eye'} size={24} color="#8B5CF6" />
+                            </TouchableOpacity>
                         </View>
 
 

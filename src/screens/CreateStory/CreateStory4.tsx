@@ -28,6 +28,13 @@ const CreateStory4 = () => {
         )
     });
     },[navigation])
+
+    const handleNext=()=>{
+
+        
+
+        // navigation.navigate("create story 5")
+    }
     
     return (
         <View className='p-3 flex-1 bg-[#fff]'>
@@ -105,7 +112,7 @@ const CreateStory4 = () => {
 
             <View className='flex-row gap-3 mt-4 mb-10'>
                 <TouchableOpacity className='flex-1 items-center bg-white border p-3 rounded-lg border-purple-300'><Text className='text-black'>Back</Text></TouchableOpacity>
-                <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={() => navigation.navigate("create story 5")}><Text className='text-white'>Next</Text></TouchableOpacity>
+                <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleNext}><Text className='text-white'>Next</Text></TouchableOpacity>
             </View>
 
 
