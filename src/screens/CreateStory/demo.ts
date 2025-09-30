@@ -77,3 +77,52 @@ export const categories = [
         image: require("../../../assets/magic/fc2.png"),
     },
 ];
+
+
+export const languages = [
+    {
+        id: 'english',
+        name: 'English',
+        code: 'en',
+    },
+    {
+        id: 'bangla',
+        name: 'বাংলা',
+        code: 'bn',
+    },
+    {
+        id: 'hindi',
+        name: 'हिंदी',
+        code: 'hi',
+    },
+    {
+        id: 'korean',
+        name: '한국어',
+        code: 'ko',
+    },
+    {
+        id: 'spanish',
+        name: 'Español',
+        code: 'es',
+    },
+    {
+        id: 'french',
+        name: 'Français',
+        code: 'fr',
+    },
+];
+
+export const lengthType = [
+    {
+        title:'short',
+        desc:'6 pages • ~3 minutes'
+    },
+    {
+        title:'medium',
+        desc:'10 pages • ~5 minutes'
+    },
+    {
+        title:'long',
+        desc:'14 pages • ~8 minutes'
+    },
+]

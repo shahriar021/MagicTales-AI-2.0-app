@@ -4,14 +4,20 @@ import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Progress from "react-native-progress";
 import Slider from '@react-native-community/slider';
+import { lengthType } from './demo';
+import { useDispatch } from 'react-redux';
+import { setLength } from 'src/redux/features/storyPromt/storyPromtSlice';
 
 const CreateStory5 = () => {
 
     const navigation = useNavigation()
     const [islangMode, setIsLanMode] = useState(false);
     const [voiceItems] = useState(Array.from({ length: 10 }, (_, x) => x + 1));
+    const [selectedItem,setSelectedItem]=useState('')
 
+    const dispatch=useDispatch()
 
+    console.log(selectedItem,"length")
     useLayoutEffect(()=>{
         navigation.setOptions({
         headerStyle: {
@@ -31,6 +37,11 @@ const CreateStory5 = () => {
     });
     },[navigation])
 
+    const handleNext=()=>{
+        dispatch(setLength(selectedItem))
+        navigation.navigate("create story 6")
+    }
+
     return (
         <View className='p-3 flex-1 bg-[#fff]'>
 
@@ -44,42 +55,18 @@ const CreateStory5 = () => {
 
                 <View className='w-full'>
 
-                    <TouchableOpacity className='border flex-row justify-between items-center p-3 rounded-xl border-[#C084FC] mb-2'>
+                   {lengthType.map(item=> <TouchableOpacity className={`border flex-row justify-between items-center p-3 rounded-xl ${item.title==selectedItem?"border-[#C084FC]":"border-[#E5E7EB]"} mb-2`} onPress={()=>setSelectedItem(item.title)}>
                         <View>
                             <View>
-                                <Text className='font-interMedium text-xl'>Short</Text>
-                                <Text className='font-interRegular mt-1 text-[#4B5563]'>6 pages • ~3 minutes</Text>
+                                <Text className='font-interMedium text-xl'>{item.title}</Text>
+                                <Text className='font-interRegular mt-1 text-[#4B5563]'>{item.desc}</Text>
 
 
                             </View>
                         </View>
 
-                        <MaterialCommunityIcons name="record-circle" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity className='border flex-row justify-between items-center p-3 rounded-xl border-[#E5E7EB] mb-2'>
-                        <View>
-                            <View>
-                                <Text className='font-interMedium text-xl'>Medium</Text>
-                                <Text className='font-interRegular mt-1 text-[#4B5563]'>10 pages • ~5 minutes</Text>
-
-
-                            </View>
-                        </View>
-
-                        <MaterialCommunityIcons name="record-circle-outline" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity className='border flex-row justify-between items-center p-3 rounded-xl border-[#E5E7EB] mb-2'>
-                        <View>
-                            <View>
-                                <Text className='font-interMedium text-xl'>Long</Text>
-                                <Text className='font-interRegular mt-1 text-[#4B5563]'>14 pages • ~8 minutes</Text>
-
-
-                            </View>
-                        </View>
-
-                        <MaterialCommunityIcons name="record-circle-outline" size={24} color="black" />
-                    </TouchableOpacity>
+                       { item.title==selectedItem?<MaterialCommunityIcons name="record-circle" size={24} color="black" />:<MaterialCommunityIcons name="record-circle-outline" size={24} color="black" />}
+                    </TouchableOpacity>)}
 
                 </View>
 
@@ -101,7 +88,7 @@ const CreateStory5 = () => {
 
             <View className='flex-row gap-3 mt-4 mb-10'>
                 <TouchableOpacity className='flex-1 items-center bg-white border p-3 rounded-lg border-purple-300'><Text className='text-black'>Back</Text></TouchableOpacity>
-                <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={() => navigation.navigate("create story 6")}><Text className='text-white'>Next</Text></TouchableOpacity>
+                <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleNext}><Text className='text-white'>Next</Text></TouchableOpacity>
             </View>
 
 

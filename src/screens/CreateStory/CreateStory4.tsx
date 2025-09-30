@@ -4,38 +4,49 @@ import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Progress from "react-native-progress";
 import { Rating } from 'react-native-ratings'
+import { languages } from './demo';
+import { useDispatch } from 'react-redux';
+import { setLanguage } from 'src/redux/features/storyPromt/storyPromtSlice';
 
 const CreateStory4 = () => {
+    const dispatch = useDispatch()
     const navigation = useNavigation()
     const [islangMode, setIsLanMode] = useState(false);
-    const [voiceItems]=useState(Array.from({length:10},(_,x)=>x+1));
+    const [voiceItems] = useState(Array.from({ length: 10 }, (_, x) => x + 1));
+    const [isSelectLan, setIsSelectLan] = useState(false)
+    const [selectedLan,setSelectedLan]=useState('English')
 
-    useLayoutEffect(()=>{
+    useLayoutEffect(() => {
         navigation.setOptions({
-        headerStyle: {
-            backgroundColor: "#fff",
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-        },
-        headerTitle: "Language & Voice",
-        headerTitleAlign:"center",
-        headerTintColor: "black",
-        headerLeft: () => (
-            <TouchableOpacity className='flex-row gap-2 items-center p-3' onPress={() => navigation.goBack()}>
-                <Feather name="arrow-left-circle" size={24} color="black" />
-            </TouchableOpacity>
-        )
-    });
-    },[navigation])
+            headerStyle: {
+                backgroundColor: "#fff",
+                elevation: 0,
+                shadowOpacity: 0,
+                borderBottomWidth: 0,
+            },
+            headerTitle: "Language & Voice",
+            headerTitleAlign: "center",
+            headerTintColor: "black",
+            headerLeft: () => (
+                <TouchableOpacity className='flex-row gap-2 items-center p-3' onPress={() => navigation.goBack()}>
+                    <Feather name="arrow-left-circle" size={24} color="black" />
+                </TouchableOpacity>
+            )
+        });
+    }, [navigation])
 
-    const handleNext=()=>{
-
-        
-
-        // navigation.navigate("create story 5")
+    const handleSelectLan=(item:any)=>{
+        setSelectedLan(item)
+        setIsSelectLan(false)
     }
-    
+
+    const handleNext = () => {
+
+        dispatch(setLanguage(selectedLan))
+
+        navigation.navigate("create story 5")
+    }
+
     return (
         <View className='p-3 flex-1 bg-[#fff]'>
 
@@ -47,13 +58,19 @@ const CreateStory4 = () => {
                 <Text className='text-[#111827] text-2xl font-poppins'>Choose Language</Text>
                 <Text className='text-gray-500 text-xl font-interMedium mt-2 mb-2'>Select your preferred language for stories</Text>
 
-                <View>
+                <View className=''>
 
-                    <View className='flex-row justify-between w-full items-center border border-gray-200 p-3 rounded-lg mt-2 mb-2'>
+                    {<TouchableOpacity className='flex-row justify-between w-full items-center border border-gray-200 p-3 rounded-lg mt-2 mb-2' onPress={() => setIsSelectLan(!isSelectLan)}>
 
-                        <Text>🇬🇧 {" "} English</Text>
+                        <Text>🇬🇧 {" "} {selectedLan}</Text>
                         <AntDesign name="down" size={24} color="black" />
-                    </View>
+                    </TouchableOpacity>}
+
+                    {isSelectLan && <View className='bg-blue-50'>
+                        <View>
+                            {languages?.map(item=><TouchableOpacity className='bg-white m-4 p-3 rounded-xl' onPress={()=>handleSelectLan(item.name)}><Text>{item.name}</Text></TouchableOpacity>)}
+                        </View>
+                    </View>}
 
                     <View className='flex-row justify-between w-full items-center border border-gray-200 p-3 rounded-lg mt-2 mb-2 bg-[#E0E7FF]'>
 
@@ -77,25 +94,25 @@ const CreateStory4 = () => {
                     <Text className='text-[#4B5563] mt-2'>Choose who will tell your stories</Text>
 
                     <View>
-                        {voiceItems.map(item=><View key={item} className='flex-row justify-between border border-[#E5E7EB] p-3 mt-2 mb-2 rounded-xl items-center'>
+                        {voiceItems.map(item => <View key={item} className='flex-row justify-between border border-[#E5E7EB] p-3 mt-2 mb-2 rounded-xl items-center'>
                             <View className='flex-row gap-3'>
-                                <Image source={require("../../../assets/magic/shahriar.jpeg")} style={{width:48,height:48,borderRadius:50}}/>
+                                <Image source={require("../../../assets/magic/shahriar.jpeg")} style={{ width: 48, height: 48, borderRadius: 50 }} />
                                 <View>
                                     <Text className='font-interMedium text-xl'>Emma</Text>
                                     <Text className='font-interRegular mt-1'>Warm & gentle</Text>
-                                   <View className='flex-row items-center gap-2 mt-1'>
-                                     <Rating
-                                        type="custom"
-                                        ratingColor="#FFBA49"
-                                        ratingBackgroundColor="#333"
-                                        tintColor="#fff"
+                                    <View className='flex-row items-center gap-2 mt-1'>
+                                        <Rating
+                                            type="custom"
+                                            ratingColor="#FFBA49"
+                                            ratingBackgroundColor="#333"
+                                            tintColor="#fff"
 
-                                        imageSize={20}
-                                        startingValue={4}
-                                        style={{ backgroundColor: 'transparent' }}
-                                    />
-                                    <Text>4.9</Text>
-                                   </View>
+                                            imageSize={20}
+                                            startingValue={4}
+                                            style={{ backgroundColor: 'transparent' }}
+                                        />
+                                        <Text>4.9</Text>
+                                    </View>
 
                                 </View>
                             </View>

@@ -15,7 +15,6 @@ const CreateStory2 = () => {
     const navigation = useNavigation()
     const [showModal,setShowModal]=useState(false)
     const [selectedCategory, setSelectedCategory] = useState(null);
-    console.log(selectedCategory,"cate")
     
     
 
@@ -44,7 +43,6 @@ const CreateStory2 = () => {
     const handleCategorySelect = (categoryId:any) => {
         setSelectedCategory(categoryId);
         // Perform any other logic, e.g., navigate or update the state elsewhere
-        console.log('Selected category:', categoryId);
     };
 
      const handleNext = () => {

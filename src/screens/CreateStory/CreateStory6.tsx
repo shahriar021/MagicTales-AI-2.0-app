@@ -4,31 +4,71 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather, Octicons } from '@expo/vector-icons';
 import * as Progress from "react-native-progress";
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAppSelector } from 'src/redux/hooks';
+import { useCreateStoryMutation } from 'src/redux/features/storyPromt/storyPromtApi';
 
 const CreateStory6 = () => {
     const navigation = useNavigation()
     const [islangMode, setIsLanMode] = useState(false);
     const [voiceItems] = useState(Array.from({ length: 10 }, (_, x) => x + 1));
 
+    const [createStory] = useCreateStoryMutation()
 
-    useLayoutEffect(()=>{
+    useLayoutEffect(() => {
         navigation.setOptions({
-        headerStyle: {
-            backgroundColor: "#fff",
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-        },
-        headerTitle: "Review & Generate",
-        headerTitleAlign:"center",
-        headerTintColor: "black",
-        headerLeft: () => (
-            <TouchableOpacity className='flex-row gap-2 items-center p-3' onPress={() => navigation.goBack()}>
-                <Feather name="arrow-left-circle" size={24} color="black" />
-            </TouchableOpacity>
-        )
-    });
-    },[navigation])
+            headerStyle: {
+                backgroundColor: "#fff",
+                elevation: 0,
+                shadowOpacity: 0,
+                borderBottomWidth: 0,
+            },
+            headerTitle: "Review & Generate",
+            headerTitleAlign: "center",
+            headerTintColor: "black",
+            headerLeft: () => (
+                <TouchableOpacity className='flex-row gap-2 items-center p-3' onPress={() => navigation.goBack()}>
+                    <Feather name="arrow-left-circle" size={24} color="black" />
+                </TouchableOpacity>
+            )
+        });
+    }, [navigation])
+
+    const hero = useAppSelector((state) => state.storyPromt.hero);
+    const theme = useAppSelector((state) => state.storyPromt.theme)
+    const art_style = useAppSelector((state) => state.storyPromt.art_style)
+    const language = useAppSelector((state) => state.storyPromt.language)
+    const lenght = useAppSelector((state) => state.storyPromt.length)
+    const token = useAppSelector((state) => state.auth.token);
+
+    // console.log("hero :", hero.age, "theme :", theme, "art style: ", art_style, "language :", language, "length", lenght, "app info promt")
+
+    const handleGenerate = async () => {
+        const info = {
+            hero: {
+                child_name: hero.child_name,
+                age: hero.age,
+                pronouns: hero.pronouns,
+                favorite_animal: hero.favorite_animal,
+                favorite_color: hero.favorite_color
+            },
+            theme: theme,
+            art_style: art_style,
+            language: language,
+            length: lenght
+        }
+        // try {
+        //     const res = await createStory({info,token}).unwrap();
+        //     console.log(res,"response")
+        //     // if(res?.success==true){
+        //     //     navigation.navigate("Generate")
+        //     // }
+            
+        // } catch (err) {
+        //     console.log(err)
+        // }
+        navigation.navigate("Generate")
+    }
+
     return (
         <View className=' flex-1 '>
             <LinearGradient colors={["#F3E8FF", "#fff", "#F3E8FF"]} style={{ flex: 1, padding: 10 }}>
@@ -137,7 +177,7 @@ const CreateStory6 = () => {
 
                 <View className='flex-row gap-3 mt-4 mb-10'>
                     <TouchableOpacity className='flex-1 items-center bg-white border p-3 rounded-lg border-purple-300'><Text className='text-black'>Back</Text></TouchableOpacity>
-                    <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={() => navigation.navigate("Generate")}><Text className='text-white'>Generate Story</Text></TouchableOpacity>
+                    <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleGenerate}><Text className='text-white'>Generate Story</Text></TouchableOpacity>
                 </View>
 
             </LinearGradient>
