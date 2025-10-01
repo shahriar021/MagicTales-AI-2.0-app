@@ -56,17 +56,17 @@ const CreateStory6 = () => {
             language: language,
             length: lenght
         }
-        // try {
-        //     const res = await createStory({info,token}).unwrap();
-        //     console.log(res,"response")
-        //     // if(res?.success==true){
-        //     //     navigation.navigate("Generate")
-        //     // }
+        try {
+            const res = await createStory({info,token}).unwrap();
+            // console.log(res,"response")
+            if(res?.success==true){
+                navigation.navigate("Generate")
+            }
             
-        // } catch (err) {
-        //     console.log(err)
-        // }
-        navigation.navigate("Generate")
+        } catch (err) {
+            console.log(err)
+        }
+        // navigation.navigate("Generate")
     }
 
     return (

@@ -17,14 +17,14 @@ const SignUpUser = () => {
     const navigation = useNavigation()
 
     const [isShowPassword, setIsShowPassword] = useState(false)
-    const [userName,setUserName]=useState('')
+    const [username,setUserName]=useState('')
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
 
 
     const handleSignUp=async()=>{
         const info={
-            userName,
+            username,
             email,
             password
         }

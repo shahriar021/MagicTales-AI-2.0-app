@@ -23,7 +23,7 @@ const storyPromptApi=baseApi.injectEndpoints({
             
             query:(token)=>{
                 return {
-                    url:"/api/ai/stories/",
+                    url:"/api/ai/stories/latest/",
                     method:"GET",
                     headers:{
                         Authorization:`Bearer ${token}`
