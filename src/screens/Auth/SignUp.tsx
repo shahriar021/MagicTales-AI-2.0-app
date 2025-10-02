@@ -5,36 +5,48 @@ import React, { useLayoutEffect, useState } from "react"
 import { Image, ScrollView, Text, TextInput, TextInputBase, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { scale, verticalScale } from "react-native-size-matters"
-import { useSignUpMutation } from "src/redux/features/auth/authApi"
+import { useSignUpGoogleMutation, useSignUpMutation } from "src/redux/features/auth/authApi"
 export const selectedCountry = {
     flag: require('../../../assets/e-icon/bdFlag.jpg'),
     dialCode: '+880',
 };
 
 const SignUpUser = () => {
-    const [signupData]=useSignUpMutation();
+    const [signupData] = useSignUpMutation();
+    const [googleSignUp] = useSignUpGoogleMutation()
 
     const navigation = useNavigation()
 
     const [isShowPassword, setIsShowPassword] = useState(false)
-    const [username,setUserName]=useState('')
-    const [email,setEmail]=useState('')
-    const [password,setPassword]=useState('')
+    const [username, setUserName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [isSelected, setIsSelected] = useState(false)
 
 
-    const handleSignUp=async()=>{
-        const info={
+    const handleSignUp = async () => {
+        const info = {
             username,
             email,
             password
         }
         console.log(info)
-        try{
+        try {
             const res = await signupData(info).unwrap()
             console.log(res)
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
+    }
+
+    const handleGoogle = async () => {
+        try {
+      console.log("pressed.");
+      const res = await googleSignUp(undefined).unwrap();
+      console.log(res, "google");
+    } catch (error) {
+      console.error("Google Sign Up Error:", error);
+    }
     }
 
     return (
@@ -44,7 +56,7 @@ const SignUpUser = () => {
             end={{ x: 1, y: 1 }}
             style={{ flex: 1 }}
         >
-            <SafeAreaView className="flex-1  items-center">
+            <SafeAreaView className="flex-1  items-center ">
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
                     <View className="w-full px-20 items-center">
@@ -60,21 +72,21 @@ const SignUpUser = () => {
                     <View className="mt-4 w-full p-5">
 
                         <View className="flex-row justify-between items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-white">
-                            <TextInput placeholder="Full Name" placeholderTextColor={"#ADAEBC"} style={{flex:1}} onChangeText={setUserName}/>
+                            <TextInput placeholder="Full Name" placeholderTextColor={"#ADAEBC"} style={{ flex: 1 }} onChangeText={setUserName} />
                         </View>
 
                         <View className="flex-row justify-between items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-white">
-                            <TextInput placeholder="Email" placeholderTextColor={"#ADAEBC"} style={{flex:1}} onChangeText={setEmail}/>
+                            <TextInput placeholder="Email" placeholderTextColor={"#ADAEBC"} style={{ flex: 1 }} onChangeText={setEmail} />
                         </View>
 
                         <View className="flex-row justify-between items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-white">
-                            <TextInput placeholder="Password" placeholderTextColor={"#ADAEBC"} style={{flex:1}} onChangeText={setPassword}/>
+                            <TextInput placeholder="Password" placeholderTextColor={"#ADAEBC"} style={{ flex: 1 }} onChangeText={setPassword} />
                             <Image source={require("../../../assets/magic/i.png")} />
                         </View>
 
                         <View className="flex-row w-[90%] items-center mt-2 mb-2">
-                            <TouchableOpacity>
-                                <MaterialIcons name="check-box-outline-blank" size={24} color="#D1D5DB" />
+                            <TouchableOpacity onPress={() => setIsSelected(!isSelected)}>
+                                {isSelected ? <MaterialIcons name="check-box-outline-blank" size={24} color="#D1D5DB" /> : <Feather name="check-square" size={24} color="#D1D5DB" />}
                             </TouchableOpacity>
                             <Text className="text-center">I confirm I am 13+ or have a parent/guardian's consent, and I agree to the <Text className="text-[#9333EA]">Terms</Text> and <Text className="text-[#9333EA]">Privacy Policy</Text> .</Text>
                         </View>
@@ -97,10 +109,10 @@ const SignUpUser = () => {
                             <Image source={require("../../../assets/magic/apple.png")} />
                             <Text className="text-[#374151] font-interMedium text-base">Continue with Apple</Text>
                         </View>
-                        <View className="flex-row justify-center gap-2 items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-[#E5E7EB]">
+                        <TouchableOpacity className="flex-row justify-center gap-2 items-center mt-2 mb-2 border-2 p-3 rounded-2xl border-[#E9D5FF] bg-[#E5E7EB] " onPress={handleGoogle}>
                             <Image source={require("../../../assets/magic/google.png")} />
                             <Text className="text-[#374151] font-interMedium text-base">Continue with Google</Text>
-                        </View>
+                        </TouchableOpacity>
 
 
                     </View>

@@ -68,7 +68,7 @@ const CreateStory4 = () => {
 
                     {isSelectLan && <View className='bg-blue-50'>
                         <View>
-                            {languages?.map(item=><TouchableOpacity className='bg-white m-4 p-3 rounded-xl' onPress={()=>handleSelectLan(item.name)}><Text>{item.name}</Text></TouchableOpacity>)}
+                            {languages?.map(item=><TouchableOpacity key={item.name} className='bg-white m-4 p-3 rounded-xl' onPress={()=>handleSelectLan(item.name)}><Text>{item.name}</Text></TouchableOpacity>)}
                         </View>
                     </View>}
 

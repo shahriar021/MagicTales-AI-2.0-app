@@ -12,6 +12,7 @@ const initialState = {
     art_style: null,
     language: null,
     length: null,
+    info:null,
 };
 
 const storyPromptSlice = createSlice({
@@ -38,6 +39,9 @@ const storyPromptSlice = createSlice({
         setLength: (state, action) => {
             state.length = action.payload;
         },
+        setInfo:(state,action)=>{
+            state.info=action.payload
+        }
     },
 });
 
@@ -47,6 +51,7 @@ export const {
     setArtStyle,
     setLanguage,
     setLength,
+    setInfo
 } = storyPromptSlice.actions;
 
 export default storyPromptSlice.reducer;

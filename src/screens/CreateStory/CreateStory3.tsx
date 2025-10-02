@@ -10,9 +10,9 @@ import { setArtStyle } from 'src/redux/features/storyPromt/storyPromtSlice';
 
 const CreateStory3 = () => {
   const navigation = useNavigation()
-  const [artStyle,setArtStyleState]=useState('');
+  const [artStyle, setArtStyleState] = useState('');
 
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,7 +33,7 @@ const CreateStory3 = () => {
     });
   }, [navigation])
 
-  const handleNext=()=>{
+  const handleNext = () => {
     dispatch(setArtStyle(artStyle))
 
     navigation.navigate("create story 4")
@@ -52,7 +52,7 @@ const CreateStory3 = () => {
 
         <View>
 
-          {storyCards.map(item => <TouchableOpacity key={item.title} className='bg-[#fff] p-3 items-center rounded-xl overflow-hidden gap-2 mt-2 mb-2' style={{ width: scale(300) }} onPress={()=>setArtStyleState(item.title)}>
+          {storyCards.map(item => <TouchableOpacity key={item.title} className={`bg-[#fff] p-3 items-center rounded-xl overflow-hidden gap-2 mt-2 mb-2 ${artStyle==item.title ? "border-4 border-red-100" : ""}`} style={{ width: scale(300) }} onPress={() => setArtStyleState(item.title)}>
             <Image source={item.image} />
 
             <Text className='text-[#1F2937] font-interSemiBold text-xl '>{item.title}</Text>

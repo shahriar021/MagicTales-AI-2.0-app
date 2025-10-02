@@ -55,7 +55,7 @@ const CreateStory5 = () => {
 
                 <View className='w-full'>
 
-                   {lengthType.map(item=> <TouchableOpacity className={`border flex-row justify-between items-center p-3 rounded-xl ${item.title==selectedItem?"border-[#C084FC]":"border-[#E5E7EB]"} mb-2`} onPress={()=>setSelectedItem(item.title)}>
+                   {lengthType.map(item=> <TouchableOpacity key={item.title} className={`border flex-row justify-between items-center p-3 rounded-xl ${item.title==selectedItem?"border-[#C084FC]":"border-[#E5E7EB]"} mb-2`} onPress={()=>setSelectedItem(item.title)}>
                         <View>
                             <View>
                                 <Text className='font-interMedium text-xl'>{item.title}</Text>

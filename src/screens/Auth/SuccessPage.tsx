@@ -1,21 +1,53 @@
 import { AntDesign, Entypo, Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { Image, ImageBackground, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, ImageBackground, Linking, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { scale, verticalScale } from 'react-native-size-matters';
+import { useForgetPassMutation } from 'src/redux/features/auth/authApi';
 
 const SuccessPage = () => {
   const { width, height } = useWindowDimensions();
+  const [forgetPass]=useForgetPassMutation()
+  const route=useRoute()
+  const {Email}=route.params
+  console.log(Email,"email...")
   const navigation = useNavigation();
+  const [loading,setLoading]=useState(false);
 
   const handleVerify = () => {
     navigation.navigate("Login Screen" as never);
   };
 
+  const handleResend=async()=>{
+    setLoading(true)
+    try{
+      const info={
+        email:Email
+      }
+      const res = await forgetPass(info).unwrap();
+      console.log(res)
+      if(res.success==true){
+        setLoading(false)
+        Alert.alert("Email sent to your mail.Chek it!")
+      }else{
+        setLoading(false)
+        Alert.alert("Oops! something went wrong!")
+      }
+    }catch(err){
+      console.log(err)
+    }
+
+    
+  }
 
   const circleSize = scale(82)
+
+  const openEmail=()=>{
+      const url = 'mailto:';
+    Linking.openURL(url).catch((err) => console.error('Failed to open email client:', err));
+  }
   return (
     <ImageBackground source={require("../../../assets/magic/Email Verification.png")} style={{ width: "100%", height: "100%" }} resizeMode='cover'>
       <SafeAreaView className='flex-1  '>
@@ -43,7 +75,7 @@ const SuccessPage = () => {
             <Text className='font-interBold text-white text-2xl text-center mb-3'>Check Your Email</Text>
             <Text className='font-interMedium text-white  text-center mb-3 '>Please check your inbox to verify your account and start creating magical stories.</Text>
 
-            <TouchableOpacity className=' bg-black rounded-xl overflow-hidden' style={{ width: "100%" }}>
+            <TouchableOpacity className=' bg-black rounded-xl overflow-hidden' style={{ width: "100%" }} onPress={openEmail}>
               <LinearGradient
                 colors={["#F97316", "#F15867", "#EC4899"]}
                 start={{ x: 0, y: 0 }}
@@ -65,11 +97,11 @@ const SuccessPage = () => {
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity className=' bg-gray-500 rounded-xl overflow-hidden mt-4 flex-row items-center justify-center gap-3 p-5' style={{ width: "100%" }}>
+            <TouchableOpacity className=' bg-gray-500 rounded-xl overflow-hidden mt-4 flex-row items-center justify-center gap-3 p-5' style={{ width: "100%" }} onPress={handleResend}>
 
               <Image source={require("../../../assets/magic/recl.png")} />
               <Text className="text-white text-lg font-interSemiBold text-center">
-                Resend Link
+                {loading?<ActivityIndicator color={"blue"} size={"small"}/>:"Resend Link"}
               </Text>
 
             </TouchableOpacity>

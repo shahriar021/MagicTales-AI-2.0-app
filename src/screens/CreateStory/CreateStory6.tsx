@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Image, ActivityIndicator } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { Feather, Octicons } from '@expo/vector-icons';
@@ -11,6 +11,7 @@ const CreateStory6 = () => {
     const navigation = useNavigation()
     const [islangMode, setIsLanMode] = useState(false);
     const [voiceItems] = useState(Array.from({ length: 10 }, (_, x) => x + 1));
+    const [loading,setLoading]=useState(false)
 
     const [createStory] = useCreateStoryMutation()
 
@@ -43,6 +44,7 @@ const CreateStory6 = () => {
     // console.log("hero :", hero.age, "theme :", theme, "art style: ", art_style, "language :", language, "length", lenght, "app info promt")
 
     const handleGenerate = async () => {
+        setLoading(true)
         const info = {
             hero: {
                 child_name: hero.child_name,
@@ -60,6 +62,7 @@ const CreateStory6 = () => {
             const res = await createStory({info,token}).unwrap();
             // console.log(res,"response")
             if(res?.success==true){
+                setLoading(false)
                 navigation.navigate("Generate")
             }
             
@@ -177,7 +180,7 @@ const CreateStory6 = () => {
 
                 <View className='flex-row gap-3 mt-4 mb-10'>
                     <TouchableOpacity className='flex-1 items-center bg-white border p-3 rounded-lg border-purple-300'><Text className='text-black'>Back</Text></TouchableOpacity>
-                    <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleGenerate}><Text className='text-white'>Generate Story</Text></TouchableOpacity>
+                    <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleGenerate}><Text className='text-white'>{loading?<ActivityIndicator/>:"Generate Story"}</Text></TouchableOpacity>
                 </View>
 
             </LinearGradient>

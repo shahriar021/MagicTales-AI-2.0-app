@@ -24,8 +24,29 @@ const authApi = baseApi.injectEndpoints({
                 }
                 
             }
+        }),
+
+        forgetPass:builder.mutation({
+            query:(info)=>{
+                console.log(info,"in redux.")
+                return {
+                    url:"/api/auth/password-reset/",
+                    method:"POST",
+                    body:info
+                }
+            }
+        }),
+
+        signUpGoogle:builder.mutation({
+            query:()=>{
+                console.log("hit")
+                return {
+                    url:"/api/auth/google/",
+                    method:"POST"
+                }
+            }
         })
     })
 })
 
-export const { useLoginMutation,useSignUpMutation } = authApi
+export const { useLoginMutation,useSignUpMutation,useForgetPassMutation,useSignUpGoogleMutation } = authApi

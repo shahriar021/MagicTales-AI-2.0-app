@@ -1,12 +1,17 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Entypo, Feather, FontAwesome, Foundation, MaterialIcons } from '@expo/vector-icons';
 import { verticalScale } from 'react-native-size-matters';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAppSelector } from 'src/redux/hooks';
+
+
 
 const ViewStory = () => {
   const navigation = useNavigation();
+  const allInfo=useAppSelector((state)=>state.storyPromt.info)
+  // console.log(allInfo,"all info")
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,11 +32,13 @@ const ViewStory = () => {
 
     })
   }, [navigation])
+
+  
   return (
     <View className='bg-#fff flex-1'>
       <ScrollView>
         <View style={{ height: verticalScale(280) }} className='items-center justify-center'>
-          <Image source={require("../../../assets/magic/viewLib.png")} style={{ width: "100%", height: "100%" }} />
+          <Image source={{uri:allInfo?.image_url}} style={{ width: "100%", height: "100%" }} />
         </View>
 
         <View className='p-3'>
@@ -77,11 +84,7 @@ const ViewStory = () => {
             </View>
             
             <View className='mt-2 border border-[#F3E8FF] p-2 rounded-lg'>
-              <Text className='text-[#475569] font-interRegular'>Join Emma on her enchanting journey
-                through a magical forest where she
-                meets talking animals, discovers hidden
-                treasures, and learns valuable lessons
-                about friendship and courage.</Text>
+              <Text className='text-[#475569] font-interRegular'>{allInfo?.synopsis}</Text>
             </View>
           </View>
           <View className='flex-row items-center gap-2 mt-2'>
@@ -89,9 +92,9 @@ const ViewStory = () => {
               <Text className='font-interSemiBold'>Tags</Text>
             </View>
           <View className='flex-row justify-center gap-10 mt-2 mb-3 p-2'>
-            <Text>Adventure</Text>
-            <Text>Fantasy</Text>
-            <Text>Watercolor</Text>
+            {allInfo?.tags.split(",").map((info:any)=><Text key={info}>{info}</Text>)}
+            
+            
           </View>
         </View>
       </ScrollView>
