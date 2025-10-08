@@ -5,10 +5,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { scale, verticalScale } from 'react-native-size-matters';
+import { useLibraryListQuery } from 'src/redux/features/storyPromt/storyPromtApi';
+import { useAppSelector } from 'src/redux/hooks';
 
 const Library = () => {
   const navigation = useNavigation();
   const [galleryList] = useState(Array.from({ length: 16 }, (_, a) => a + 1))
+  const token=useAppSelector((state)=>state.auth.token)
+  const {data, error, isLoading}=useLibraryListQuery(token)
+if (isLoading) {
+  console.log("Loading data...");
+} else if (error) {
+  console.log("Error fetching library list:", error);
+} else {
+  console.log("Library list data:", data);
+}
 
   const galleryColors = {
     1: require("../../../assets/magic/lb1.png"),

@@ -4,10 +4,20 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AntDesign, Fontisto, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import ProfileEditModal from './ProfileEditModal'
 
 const AccountSettings = () => {
     const [islangMode, setIsLanMode] = useState(false);
+    const [firstName,setFirstName]=useState('');
+    const [modal,setModal]=useState(false)
+    const [istitle,setTile]=useState("")
     const navigation = useNavigation()
+
+    const handleEdit=(title:any)=>{
+        console.log(title)
+        setTile(title)
+        setModal(true)
+    }
     return (
         <LinearGradient colors={["#FFF3E4", "#E4F0FF"]} style={{ flex: 1 }}>
             <SafeAreaView className="flex-1 p-3">
@@ -36,9 +46,7 @@ const AccountSettings = () => {
                                 <Text className="text-sm text-[#6B7280]">Manage your profile</Text>
                             </View>
                         </View>
-                        <TouchableOpacity>
-                            <Text className='text-[#2563EB] bg-[#EFF6FF] p-3 rounded-lg'>Edit</Text>
-                        </TouchableOpacity>
+                       
                     </View>
 
                     <View className="flex-row items-center justify-between mt-2 mb-2 bg-[#fff] p-3 rounded-xl" >
@@ -49,12 +57,12 @@ const AccountSettings = () => {
                                 <Text className="text-sm text-[#6B7280]">shahriar chowdhury</Text>
                             </View>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=>handleEdit("Full Name")}>
                             <Text className='text-[#2563EB] bg-[#EFF6FF] p-3 rounded-lg'>Edit</Text>
                         </TouchableOpacity>
                     </View>
                     <View className="flex-row items-center justify-between mt-2 mb-2 bg-[#fff] p-3 rounded-xl" >
-                        <View className="flex-row items-center gap-2">
+                        <View className="flex-row items-center gap-2"> 
 
                             <View>
                                 <Text className="text-[#1F2937] font-interMedium text-lg">Email Address</Text>
@@ -112,7 +120,7 @@ const AccountSettings = () => {
                         <Text className='text-[#EF4444] font-interMedium'>Delete Account</Text>
                     </TouchableOpacity>
                 </View>
-
+                <ProfileEditModal visible={modal} onClose={()=>setModal(false)} Title={istitle}/>
             </SafeAreaView>
         </LinearGradient>
     )

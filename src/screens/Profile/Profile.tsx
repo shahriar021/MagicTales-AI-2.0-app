@@ -1,35 +1,28 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, {  useState } from "react";
 import {
   View,
   Dimensions,
-  ImageSourcePropType,
   useWindowDimensions,
   Image,
   Text,
   TouchableOpacity,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-
 import { useAppSelector } from "src/redux/hooks";
 import { LinearGradient } from "expo-linear-gradient";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, EvilIcons, MaterialIcons } from "@expo/vector-icons";
 import { setToken } from "src/redux/features/auth/authSlice";
 import { useDispatch } from "react-redux";
-
-const { width } = Dimensions.get("window");
-
-
-
-const isTablet = width > 768;
+import { useGetProfileQuery } from "src/redux/features/Profile/profileApi";
 
 export default function YourComponent() {
   const dispatch=useDispatch()
-
+  const token  = useAppSelector((state)=>state.auth.token)
+  console.log(token,"token")
+  const {data}=useGetProfileQuery(token)
   const navigation = useNavigation();
-
-  const { width, height } = useWindowDimensions()
+  console.log(data,"data..")
 
   const handleLogout=()=>{
     dispatch(setToken(null))
@@ -41,12 +34,12 @@ export default function YourComponent() {
 
         <View className="flex-row justify-between mb-4">
           <View className="flex-row items-center gap-2">
-            <View style={{ width: 56, height: 56 }} className="rounded-full overflow-hidden">
-              <Image source={require("../../../assets/magic/shahriar.jpeg")} style={{ width: "100%", height: "100%" }} />
+            <View style={{ width: 56, height: 56 }} className="rounded-full overflow-hidden items-center justify-center">
+              {data?.data?.profile_picture?<Image source={require("../../../assets/magic/shahriar.jpeg")} style={{ width: "100%", height: "100%" }} />:<EvilIcons name="user" size={60} color="black" />}
             </View>
             <View>
-              <Text className="text-[#1F2937] font-interBold text-xl">Sarah joshns</Text>
-              <Text className="text-[#4B5563] font-interRegular">sarah.j@email.com</Text>
+              <Text className="text-[#1F2937] font-interBold text-xl">{data?.data?.first_name}{" "}{data?.data?.last_name}</Text>
+              <Text className="text-[#4B5563] font-interRegular">{data?.data?.email}</Text>
             </View>
           </View>
 
