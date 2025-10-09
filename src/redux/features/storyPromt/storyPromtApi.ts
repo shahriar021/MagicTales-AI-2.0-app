@@ -6,7 +6,6 @@ const storyPromptApi = baseApi.injectEndpoints({
         createStory: builder.mutation({
 
             query: ({ info, token }) => {
-                console.log(info, token, "in redux.")
                 return {
                     url: "/api/ai/stories/",
                     method: "POST",
@@ -35,7 +34,6 @@ const storyPromptApi = baseApi.injectEndpoints({
         libraryList:builder.query({
 
             query:(token)=>{
-                console.log(token,"token")
                 return {
                     
                     url:"/api/ai/stories/",

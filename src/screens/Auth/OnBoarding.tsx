@@ -60,10 +60,8 @@ const OnBoarding = () => {
     // } else {
     //   Alert.alert("Please Enter a valid Email or password.");
     // }
-    console.log(email, "email.")
     const normalizedEmail = email.trim().toLowerCase();
     const type = normalizedEmail === "user@gmail.com" ? "user" : "rider";
-    console.log(type, "type")
     dispatch(setToken(true))
     dispatch(setUserType(type))
   };

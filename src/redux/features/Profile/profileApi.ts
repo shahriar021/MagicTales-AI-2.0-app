@@ -12,7 +12,8 @@ const profileApi = baseApi.injectEndpoints({
                         Authorization: `Bearer ${token}`
                     }
                 }
-            }
+            },
+            providesTags:['profile']
         }),
 
         updateProfile:builder.mutation({
@@ -25,7 +26,8 @@ const profileApi = baseApi.injectEndpoints({
                         Authorization:`Bearer ${token}`
                     }
                 }
-            }
+            },
+            invalidatesTags:['profile']
         })
     })
 })

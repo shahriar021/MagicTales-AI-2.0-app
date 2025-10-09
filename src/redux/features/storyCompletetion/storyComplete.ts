@@ -5,7 +5,6 @@ const storyCompletetionApi=baseApi.injectEndpoints({
         saveToLibrary:builder.mutation({
 
             query:({storyId,token})=>{
-                console.log(storyId,"sotyr id.")
                 return{
                     url:`/api/ai/stories/${storyId}/save-to-library/`,
                     method:"POST",

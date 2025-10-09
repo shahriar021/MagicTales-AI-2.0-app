@@ -9,14 +9,42 @@ import {
   Text,
   TouchableOpacity,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAppSelector } from "src/redux/hooks";
+import { useGetProfileQuery } from "src/redux/features/Profile/profileApi";
+import { useDispatch } from "react-redux";
+import { setEmail, setFirstName, setLastName, setProPic } from "src/redux/features/Profile/profileSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("screen");
 
 const HomeScreen = () => {
+  const dispatch=useDispatch();
+  const token  = useAppSelector((state)=>state.auth.token)
+    const {data,isLoading}=useGetProfileQuery(token)
+    console.log(data?.data?.first_name,"in home")
+
+    useEffect(() => {
+    if (data && data.data) {
+      const profileData = data.data;
+      const saveProfileToStorage = async () => {
+        try {
+          const profileJson = JSON.stringify(profileData);
+          await AsyncStorage.setItem('userProfileData', profileJson);
+          console.log('Profile saved to AsyncStorage.');
+        } catch (e) {
+          console.error('Error saving profile to AsyncStorage:', e);
+        }
+      };
+      
+      saveProfileToStorage();
+    }
+    
+  }, [token, data, dispatch]); 
 
   const navigation = useNavigation();
 
@@ -30,7 +58,7 @@ const HomeScreen = () => {
             <Text className="text-[#7E22CE] font-fredokaRegular text-4xl mt-5 ">Hi there!</Text>
             <Text className="text-[#A855F7] font-fredokaRegular mt-2">💗 Ready for a magical story? 💗</Text>
           </View>
-
+            {isLoading&&<ActivityIndicator size={"large"} color={"blue"}/>}
           <View className="flex-1 items-center p-5 justify-center ">
             <View style={{ width: scale(256), height: verticalScale(192) }}>
               <Image source={require("../../../assets/magic/homeimg.png")} style={{ width: "100%", height: "100%" }} />

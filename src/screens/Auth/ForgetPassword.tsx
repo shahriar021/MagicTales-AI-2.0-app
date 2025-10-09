@@ -26,7 +26,6 @@ const ForgetPassword = () => {
         email:email
       }
       const res = await forgetPass(info).unwrap();
-      console.log(res)
       if(res.success==true){
         setLoading(false)
         navigation.navigate("Success page",{Email:email})

@@ -14,7 +14,6 @@ const AccountSettings = () => {
     const navigation = useNavigation()
 
     const handleEdit=(title:any)=>{
-        console.log(title)
         setTile(title)
         setModal(true)
     }

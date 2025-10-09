@@ -57,7 +57,7 @@ const ReadStory = () => {
     const playAudio = () => {
         const audio = new Sound(`${allInfo?.audio_url}`, null, (error) => {
             if (error) {
-                console.log('Failed to load the sound:', error);
+                // console.log('Failed to load the sound:', error);
                 return;
             }
             audio.setVolume(volume);
@@ -80,7 +80,7 @@ const ReadStory = () => {
     const stopAudio = () => {
         if (sound) {
             sound.stop(() => {
-                console.log('Audio stopped');
+                // console.log('Audio stopped');
             });
         }
     };

@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, {  useEffect, useState } from "react";
 import {
   View,
   Dimensions,
@@ -15,18 +15,42 @@ import { AntDesign, EvilIcons, MaterialIcons } from "@expo/vector-icons";
 import { setToken } from "src/redux/features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { useGetProfileQuery } from "src/redux/features/Profile/profileApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function YourComponent() {
   const dispatch=useDispatch()
-  const token  = useAppSelector((state)=>state.auth.token)
-  console.log(token,"token")
-  const {data}=useGetProfileQuery(token)
+  
   const navigation = useNavigation();
-  console.log(data,"data..")
+  const [profileInfo,setProfileInfo]=useState(null)
+
+  useEffect(() => {
+    const loadProfileFromStorage = async () => {
+      try {
+        const profileJson = await AsyncStorage.getItem('userProfileData');
+        console.log(profileJson,"info in profile")
+        
+        
+        if (profileJson) {
+          const profileData = JSON.parse(profileJson);
+          
+          console.log('Profile loaded from AsyncStorage and set to Redux.');
+          setProfileInfo(profileData)
+        }
+      } catch (e) {
+        console.error('Error loading profile from AsyncStorage:', e);
+      }
+    };
+
+    loadProfileFromStorage();
+  }, [dispatch]);
+
+
 
   const handleLogout=()=>{
     dispatch(setToken(null))
   }
+
+  console.log(profileInfo,"-----")
 
   return (
     <LinearGradient colors={["#FFF3E4", "#E4F0FF"]} style={{ flex: 1 }}>
@@ -35,11 +59,11 @@ export default function YourComponent() {
         <View className="flex-row justify-between mb-4">
           <View className="flex-row items-center gap-2">
             <View style={{ width: 56, height: 56 }} className="rounded-full overflow-hidden items-center justify-center">
-              {data?.data?.profile_picture?<Image source={require("../../../assets/magic/shahriar.jpeg")} style={{ width: "100%", height: "100%" }} />:<EvilIcons name="user" size={60} color="black" />}
+              {profileInfo?<Image source={require("../../../assets/magic/shahriar.jpeg")} style={{ width: "100%", height: "100%" }} />:<EvilIcons name="user" size={60} color="black" />}
             </View>
             <View>
-              <Text className="text-[#1F2937] font-interBold text-xl">{data?.data?.first_name}{" "}{data?.data?.last_name}</Text>
-              <Text className="text-[#4B5563] font-interRegular">{data?.data?.email}</Text>
+              <Text className="text-[#1F2937] font-interBold text-xl">{profileInfo?.first_name}{" "}{profileInfo?.last_name}</Text>
+              <Text className="text-[#4B5563] font-interRegular">{profileInfo?.email}</Text>
             </View>
           </View>
 

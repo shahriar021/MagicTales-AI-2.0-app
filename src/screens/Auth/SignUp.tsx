@@ -30,7 +30,6 @@ const SignUpUser = () => {
             email,
             password
         }
-        console.log(info)
         try {
             const res = await signupData(info).unwrap()
             console.log(res)
@@ -41,9 +40,7 @@ const SignUpUser = () => {
 
     const handleGoogle = async () => {
         try {
-      console.log("pressed.");
       const res = await googleSignUp(undefined).unwrap();
-      console.log(res, "google");
     } catch (error) {
       console.error("Google Sign Up Error:", error);
     }

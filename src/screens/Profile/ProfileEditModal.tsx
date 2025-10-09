@@ -39,6 +39,7 @@ const ProfileEditModal = ({ visible, onClose, Title }: any) => {
         try {
             const res = await updateProfileInfo(formData).unwrap()
             console.log(res, "in modal")
+            onClose()
         } catch (err) {
             console.log(err)
         }
