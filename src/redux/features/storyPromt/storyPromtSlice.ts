@@ -11,6 +11,7 @@ const initialState = {
     theme: null,
     art_style: null,
     language: null,
+    voice:null,
     length: null,
     info:null,
 };
@@ -35,6 +36,10 @@ const storyPromptSlice = createSlice({
         setLanguage: (state, action) => {
             state.language = action.payload;
         },
+
+        setVoice:(state,action)=>{
+            state.voice = action.payload
+        },
         
         setLength: (state, action) => {
             state.length = action.payload;
@@ -50,6 +55,7 @@ export const {
     setTheme,
     setArtStyle,
     setLanguage,
+    setVoice,
     setLength,
     setInfo
 } = storyPromptSlice.actions;

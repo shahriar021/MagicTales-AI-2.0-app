@@ -16,6 +16,7 @@ const LoginScreen = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [loading,setLoading]=useState(false)
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -29,7 +30,7 @@ const LoginScreen = () => {
     };
 
     const handleLogin = async () => {
-
+        setLoading(true)
 
         if (!email.trim()) {
             Alert.alert("Error", "Please enter your email address");
@@ -56,13 +57,17 @@ const LoginScreen = () => {
         }
         try {
             const res = await loginData(info).unwrap()
+            console.log(res,"log in")
             if (res?.success == true) {
                 Alert.alert("Login Successfull!")
-                dispatch(setToken(res?.data?.access))
+                dispatch(setToken(res?.data?.token))
             } else {
+                console.log(res)
                 Alert.alert("Something went wrong!")
             }
+            setLoading(false)
         } catch (err: any) {
+            setLoading(false)
             Alert.alert(err?.data?.message)
         }
     };

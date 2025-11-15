@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AntDesign, Fontisto, MaterialCommunityIcons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import ProfileEditModal from './ProfileEditModal'
 
 const AccountSettings = () => {
@@ -45,7 +45,7 @@ const AccountSettings = () => {
                                 <Text className="text-sm text-[#6B7280]">Manage your profile</Text>
                             </View>
                         </View>
-                       
+        
                     </View>
 
                     <View className="flex-row items-center justify-between mt-2 mb-2 bg-[#fff] p-3 rounded-xl" >
@@ -119,7 +119,7 @@ const AccountSettings = () => {
                         <Text className='text-[#EF4444] font-interMedium'>Delete Account</Text>
                     </TouchableOpacity>
                 </View>
-                <ProfileEditModal visible={modal} onClose={()=>setModal(false)} Title={istitle}/>
+                <ProfileEditModal visible={modal} onClose={()=>setModal(false)} Title={istitle} />
             </SafeAreaView>
         </LinearGradient>
     )

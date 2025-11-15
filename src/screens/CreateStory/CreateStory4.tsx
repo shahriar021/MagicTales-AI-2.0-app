@@ -1,12 +1,14 @@
 import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Progress from "react-native-progress";
 import { Rating } from 'react-native-ratings'
 import { languages } from './demo';
 import { useDispatch } from 'react-redux';
-import { setLanguage } from 'src/redux/features/storyPromt/storyPromtSlice';
+import { setLanguage,setVoice } from 'src/redux/features/storyPromt/storyPromtSlice';
+import { useAppSelector } from 'src/redux/hooks';
+import { useGetGenerateOptQuery } from 'src/redux/features/generateOptions/generateOptApi';
 
 const CreateStory4 = () => {
     const dispatch = useDispatch()
@@ -15,6 +17,10 @@ const CreateStory4 = () => {
     const [voiceItems] = useState(Array.from({ length: 10 }, (_, x) => x + 1));
     const [isSelectLan, setIsSelectLan] = useState(false)
     const [selectedLan,setSelectedLan]=useState('English')
+    const [selectedVoice,setSelectedVoice]=useState()
+     const token = useAppSelector((state) => state.auth.token)
+      const { data: genarateOptions, isLoading } = useGetGenerateOptQuery(token)
+      console.log(genarateOptions?.data?.narrator_voices,"4")
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -40,9 +46,14 @@ const CreateStory4 = () => {
         setIsSelectLan(false)
     }
 
+    const handleVoice=(item:any)=>{
+        setSelectedVoice(item)
+    }
+
     const handleNext = () => {
 
         dispatch(setLanguage(selectedLan))
+        dispatch(setVoice(selectedVoice))
 
         navigation.navigate("create story 5")
     }
@@ -94,11 +105,11 @@ const CreateStory4 = () => {
                     <Text className='text-[#4B5563] mt-2'>Choose who will tell your stories</Text>
 
                     <View>
-                        {voiceItems.map(item => <View key={item} className='flex-row justify-between border border-[#E5E7EB] p-3 mt-2 mb-2 rounded-xl items-center'>
+                        {genarateOptions?.data?.narrator_voices?.map((item:any) => <TouchableOpacity key={item.id} className='flex-row justify-between border border-[#E5E7EB] p-3 mt-2 mb-2 rounded-xl items-center' onPress={()=>handleVoice(item?.id)}>
                             <View className='flex-row gap-3'>
                                 <Image source={require("../../../assets/magic/shahriar.jpeg")} style={{ width: 48, height: 48, borderRadius: 50 }} />
                                 <View>
-                                    <Text className='font-interMedium text-xl'>Emma</Text>
+                                    <Text className='font-interMedium text-xl'>{item?.name}</Text>
                                     <Text className='font-interRegular mt-1'>Warm & gentle</Text>
                                     <View className='flex-row items-center gap-2 mt-1'>
                                         <Rating
@@ -116,10 +127,12 @@ const CreateStory4 = () => {
 
                                 </View>
                             </View>
-                            <View className='w-[34px] h-[48px] bg-[#EEF2FF] items-center justify-center rounded-xl overflow-hidden'>
-                                <AntDesign name="caretright" size={20} color="#4F46E5" />
+                            <View className='w-[34px] h-[48px]  items-center justify-center rounded-xl overflow-hidden'>
+                                {/* <AntDesign name="caretright" size={20} color="#4F46E5" /> */}
+                                {selectedVoice==item.id?<FontAwesome name="circle" size={24} color="black" />
+                                :<FontAwesome name="circle" size={24} color="#c66fcd" />}
                             </View>
-                        </View>)}
+                        </TouchableOpacity>)}
                     </View>
 
                 </View>

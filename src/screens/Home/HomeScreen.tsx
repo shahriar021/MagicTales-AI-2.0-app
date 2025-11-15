@@ -19,6 +19,7 @@ import { useGetProfileQuery } from "src/redux/features/Profile/profileApi";
 import { useDispatch } from "react-redux";
 import { setEmail, setFirstName, setLastName, setProPic } from "src/redux/features/Profile/profileSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useBooleanContext } from "src/context/useProfileProviderContext";
 
 const { width } = Dimensions.get("screen");
 
@@ -26,7 +27,9 @@ const HomeScreen = () => {
   const dispatch=useDispatch();
   const token  = useAppSelector((state)=>state.auth.token)
     const {data,isLoading}=useGetProfileQuery(token)
-    console.log(data?.data?.first_name,"in home")
+    
+    const { value, setValue } = useBooleanContext();
+    console.log(value,"in home")
 
     useEffect(() => {
     if (data && data.data) {
@@ -36,6 +39,7 @@ const HomeScreen = () => {
           const profileJson = JSON.stringify(profileData);
           await AsyncStorage.setItem('userProfileData', profileJson);
           console.log('Profile saved to AsyncStorage.');
+          setValue(false)
         } catch (e) {
           console.error('Error saving profile to AsyncStorage:', e);
         }
@@ -44,7 +48,7 @@ const HomeScreen = () => {
       saveProfileToStorage();
     }
     
-  }, [token, data, dispatch]); 
+  }, [token, data,value]); 
 
   const navigation = useNavigation();
 

@@ -8,17 +8,20 @@ import MainLayout from "./src/components/layout/MainLayout";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
+import {BooleanProvider} from "./src/context/useProfileProviderContext"
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView>
         <Provider store={store}>
+          <BooleanProvider>
           <PersistGate loading={null} persistor={persistor}>
             <NavigationContainer>
               <MainLayout />
             </NavigationContainer>
           </PersistGate>
+          </BooleanProvider>
         </Provider>
       </GestureHandlerRootView>
     </SafeAreaProvider>

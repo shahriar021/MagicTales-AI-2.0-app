@@ -1,14 +1,12 @@
 import React, {  useEffect, useState } from "react";
 import {
   View,
-  Dimensions,
-  useWindowDimensions,
   Image,
   Text,
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "src/redux/hooks";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign, EvilIcons, MaterialIcons } from "@expo/vector-icons";
@@ -16,18 +14,21 @@ import { setToken } from "src/redux/features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { useGetProfileQuery } from "src/redux/features/Profile/profileApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useBooleanContext } from "src/context/useProfileProviderContext";
 
 export default function YourComponent() {
   const dispatch=useDispatch()
   
   const navigation = useNavigation();
   const [profileInfo,setProfileInfo]=useState(null)
+  const { value, setValue } = useBooleanContext();
+
+  console.log(value,"in profile.")
 
   useEffect(() => {
     const loadProfileFromStorage = async () => {
       try {
         const profileJson = await AsyncStorage.getItem('userProfileData');
-        console.log(profileJson,"info in profile")
         
         
         if (profileJson) {
@@ -41,16 +42,36 @@ export default function YourComponent() {
       }
     };
 
-    loadProfileFromStorage();
-  }, [dispatch]);
+   if (value) {
+      loadProfileFromStorage();
+      setValue(false); // Reset the context flag after fetching
+    }
+  }, [value]);
 
+// useFocusEffect(
+//         React.useCallback(() => {
+//             const loadProfileFromStorage = async () => {
+//                 try {
+//                     const profileJson = await AsyncStorage.getItem('userProfileData');
+
+//                     if (profileJson) {
+//                         const profileData = JSON.parse(profileJson);
+//                         setProfileInfo(profileData); // Immediately update the state
+//                         console.log("Profile loaded from AsyncStorage.");
+//                     }
+//                 } catch (e) {
+//                     console.error("Error loading profile from AsyncStorage:", e);
+//                 }
+//             };
+
+//             loadProfileFromStorage();
+//         }, []) // Empty dependency array means this effect runs when the screen focuses
+//     );
 
 
   const handleLogout=()=>{
     dispatch(setToken(null))
   }
-
-  console.log(profileInfo,"-----")
 
   return (
     <LinearGradient colors={["#FFF3E4", "#E4F0FF"]} style={{ flex: 1 }}>

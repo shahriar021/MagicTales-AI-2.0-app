@@ -18,13 +18,15 @@ const profileApi = baseApi.injectEndpoints({
 
         updateProfile:builder.mutation({
 
-            query:(token)=>{
+            query:({formData,token})=>{
+                console.log(formData,token,"in redux.")
                 return{
                     url:"/api/auth/profile/",
                     method:"PUT",
                     headers:{
                         Authorization:`Bearer ${token}`
-                    }
+                    },
+                    body:formData
                 }
             },
             invalidatesTags:['profile']

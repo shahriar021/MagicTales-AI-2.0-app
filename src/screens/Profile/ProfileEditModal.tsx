@@ -2,9 +2,11 @@ import { View, Text, Modal, TouchableOpacity, Dimensions, TextInput } from 'reac
 import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useUpdateProfileMutation } from 'src/redux/features/Profile/profileApi'
+import { useAppSelector } from 'src/redux/hooks'
+import { useBooleanContext } from 'src/context/useProfileProviderContext'
 const { height } = Dimensions.get("screen")
 
-const ProfileEditModal = ({ visible, onClose, Title }: any) => {
+const ProfileEditModal = ({ visible, onClose, Title,setUp }: any) => {
 
     const [fName, setFname] = useState("")
     const [lName, setLname] = useState("")
@@ -15,6 +17,9 @@ const ProfileEditModal = ({ visible, onClose, Title }: any) => {
     const [new_password, setNewPassword] = useState("")
     const [propic, setPropic] = useState("")
     const [updateProfileInfo] = useUpdateProfileMutation()
+    const { value, setValue } = useBooleanContext();
+
+    const token=useAppSelector((state)=>state.auth.token)
 
     const handleSave = async () => {
         const formData = new FormData();
@@ -37,9 +42,13 @@ const ProfileEditModal = ({ visible, onClose, Title }: any) => {
             }
         }
         try {
-            const res = await updateProfileInfo(formData).unwrap()
-            console.log(res, "in modal")
+            const res = await updateProfileInfo({formData,token}).unwrap()
+            if(res.code==200){
+                setValue(true);
+                console.log(res, "in modal")
             onClose()
+            }
+            
         } catch (err) {
             console.log(err)
         }

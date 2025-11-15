@@ -38,6 +38,7 @@ const CreateStory6 = () => {
     const theme = useAppSelector((state) => state.storyPromt.theme)
     const art_style = useAppSelector((state) => state.storyPromt.art_style)
     const language = useAppSelector((state) => state.storyPromt.language)
+    const voice = useAppSelector((state) => state.storyPromt.voice)
     const lenght = useAppSelector((state) => state.storyPromt.length)
     const token = useAppSelector((state) => state.auth.token);
 
@@ -56,6 +57,7 @@ const CreateStory6 = () => {
             theme: theme,
             art_style: art_style,
             language: language,
+            voice:voice,
             length: lenght
         }
         try {
@@ -180,7 +182,7 @@ const CreateStory6 = () => {
 
                 <View className='flex-row gap-3 mt-4 mb-10'>
                     <TouchableOpacity className='flex-1 items-center bg-white border p-3 rounded-lg border-purple-300'><Text className='text-black'>Back</Text></TouchableOpacity>
-                    <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleGenerate}><Text className='text-white'>{loading?<ActivityIndicator/>:"Generate Story"}</Text></TouchableOpacity>
+                    <TouchableOpacity className='flex-1 items-center bg-[#8B5CF6] p-3 border border-purple-300 rounded-lg' onPress={handleGenerate}><Text className='text-white'>{loading?<ActivityIndicator color={"white"}/>:"Generate Story"}</Text></TouchableOpacity>
                 </View>
 
             </LinearGradient>
