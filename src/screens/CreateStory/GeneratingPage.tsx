@@ -1,27 +1,28 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, Animated, Easing, ActivityIndicator } from 'react-native'
+import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Progress from "react-native-progress";
 import { scale, verticalScale } from 'react-native-size-matters';
-import { useNavigation } from '@react-navigation/native';
 import { useAppSelector } from 'src/redux/hooks';
 import { useGeneratedStoryMutation } from 'src/redux/features/storyPromt/storyPromtApi';
 import ShimmerEffect from './animaiton/ShimmerUi';
 import { useDispatch } from 'react-redux';
 import { setInfo } from 'src/redux/features/storyPromt/storyPromtSlice';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from 'src/types/navigationPage';
+import { StoryDataResponse } from 'src/types/createStory';
 
+type Props={
+  navigation:StackNavigationProp<RootStackParamList,"Generate">
+}
 
-
-const GeneratingPage = () => {
+const GeneratingPage = ({navigation}:Props) => {
   const dispatch=useDispatch()
   const [getStoryApi] = useGeneratedStoryMutation()
-  const navigation = useNavigation()
   const token = useAppSelector((state) => state.auth.token);
-
-  const [storyData, setStoryData] = useState(null);
+  const [storyData, setStoryData] = useState<StoryDataResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  console.log(storyData?.data,"story data.")
   const progress = storyData?.data?.progress ?? 0;
 
   const progressRef = useRef(null);
@@ -106,7 +107,7 @@ const GeneratingPage = () => {
             <Text className='text-white font-interRegular text-xl text-center mt-1 mb-2'>Your magical story is taking shape ✨</Text>
           </View>
 
-          <TouchableOpacity style={{ backgroundColor: 'rgba(229, 231, 235, 0.3)' }} className='p-3 rounded-lg gap-4 mt-2 mb-4' onPress={() => navigation.navigate("View Libray" as never )}>
+          <TouchableOpacity style={{ backgroundColor: 'rgba(229, 231, 235, 0.3)' }} className='p-3 rounded-lg gap-4 mt-2 mb-4' onPress={() => navigation.navigate("View Libray" )}>
             <Text className='font-interSemiBold text-white'>Story Preview</Text>
             <View style={{ height: verticalScale(220), overflow: 'hidden' }}>
               {/* <ShimmerEffect/> */}
@@ -121,7 +122,7 @@ const GeneratingPage = () => {
           </View>
         </ScrollView>
 
-        <TouchableOpacity className='bg-[#fff] border items-center mt-2 mb-4 p-4 rounded-lg border-gray-400' onPress={() => navigation.navigate("create story 1" as never)}>
+        <TouchableOpacity className='bg-[#fff] border items-center mt-2 mb-4 p-4 rounded-lg border-gray-400' onPress={() => navigation.navigate("create story 1" )}>
           <Text className='text-black font-interMedium '>Cancel Creation</Text>
         </TouchableOpacity>
       </SafeAreaView>

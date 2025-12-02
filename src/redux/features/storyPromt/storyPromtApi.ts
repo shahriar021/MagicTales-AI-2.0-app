@@ -43,10 +43,22 @@ const storyPromptApi = baseApi.injectEndpoints({
                     }
                 }
             }
+        }),
+
+        getSpecificStory:builder.query({
+            query:({token,sid})=>{
+                console.log(sid,"redux.")
+                return{
+                    url:`/api/ai/stories/${sid}/`,
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+            }
         })
     })
 
 
 })
 
-export const { useCreateStoryMutation, useGeneratedStoryMutation,useLibraryListQuery } = storyPromptApi;
+export const { useCreateStoryMutation, useGeneratedStoryMutation,useLibraryListQuery,useGetSpecificStoryQuery } = storyPromptApi;

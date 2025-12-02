@@ -1,22 +1,32 @@
-import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native'
-import React, { useLayoutEffect } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
+import React, {  useLayoutEffect } from 'react'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { Entypo, Feather, FontAwesome, FontAwesome6 } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { scale, verticalScale } from 'react-native-size-matters'
-import { useSaveToLibraryMutation } from 'src/redux/features/storyCompletetion/storyComplete'
-import { useAppSelector } from 'src/redux/hooks'
+import * as Notifications from 'expo-notifications';
+import { handleDownload } from 'src/components/ui/storyCompleteView/StoryCompleteView'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackParamList } from 'src/types/navigationPage'
 
-const StoryCompleteView = () => {
-  const navigation = useNavigation()
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
-  const [saveToLib] = useSaveToLibraryMutation();
+type StoryCompleteViewParams=RouteProp<RootStackParamList,"Story Complete View">
 
-  const allInfo = useAppSelector((state) => state.storyPromt.info)
+type Props={
+  navigation:StackNavigationProp<RootStackParamList,"Read Story">
+}
 
-  const ID = allInfo?.id
-  const token = useAppSelector((state) => state.auth.token);
-
+const StoryCompleteView = ({navigation}:Props) => {
+  const route=useRoute<StoryCompleteViewParams>()
+  const {info}=route.params
+  
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -37,21 +47,6 @@ const StoryCompleteView = () => {
     })
   }, [navigation])
 
-  const handleSaveToLib = async () => {
-    try {
-
-      const res = await saveToLib({ storyId: ID, token }).unwrap();
-      if (res.code == 200) {
-        Alert.alert("Story successfully saved to your library.")
-      } else {
-        Alert.alert("Story failed to saved.")
-      }
-
-    } catch (err) {
-      Alert.alert("Something went wrong!!")
-      console.log(err)
-    }
-  }
 
   return (
 
@@ -70,9 +65,9 @@ const StoryCompleteView = () => {
             <Text className='text-[#4338CA]'>Theme: Space</Text>
           </View>
 
-          <TouchableOpacity className='flex-row items-center justify-center gap-2 w-full border border-gray-200 p-4 m-4 bg-white rounded-lg mt-2' onPress={handleSaveToLib}>
+          <TouchableOpacity className='flex-row items-center justify-center gap-2 w-full border border-gray-200 p-4 m-4 bg-white rounded-lg mt-2' onPress={()=>navigation.navigate("BottomScreen",{screen:'Library'})}>
             <Entypo name="save" size={24} color="#4338CA" />
-            <Text className='text-[#4338CA]'>Save to Library</Text>
+            <Text className='text-[#4338CA]'>Back to Library</Text>
 
           </TouchableOpacity>
 
@@ -82,17 +77,16 @@ const StoryCompleteView = () => {
 
           </View>
 
-          <View className='flex-row items-center justify-center gap-2 w-full border border-gray-200 p-4 m-4 bg-white rounded-lg mt-2'>
+          <TouchableOpacity className='flex-row items-center justify-center gap-2 w-full border border-gray-200 p-4 m-4 bg-white rounded-lg mt-2' onPress={()=>handleDownload(info)}>
             <FontAwesome6 name="file-pdf" size={24} color="#4338CA" />
             <Text className='text-[#4338CA]'>Download as PDF</Text>
+          </TouchableOpacity>
 
-          </View>
-
-          <View className='flex-row items-center justify-center gap-2 w-full border border-gray-200 p-4 m-4 bg-white rounded-lg mt-2'>
+          <TouchableOpacity className='flex-row items-center justify-center gap-2 w-full border border-gray-200 p-4 m-4 bg-white rounded-lg mt-2' onPress={()=>navigation.navigate("create story 1")}>
             <Entypo name="plus" size={24} color="#4338CA" />
             <Text className='text-[#4338CA]'>Create New Story</Text>
 
-          </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </LinearGradient>

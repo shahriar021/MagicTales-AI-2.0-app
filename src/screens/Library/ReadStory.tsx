@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, ScrollView, Image, useWindowDimensions, Dimensions } from 'react-native'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
+import {  useRoute,RouteProp } from '@react-navigation/native';
 import { Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { verticalScale } from 'react-native-size-matters';
 import Slider from '@react-native-community/slider';
@@ -8,20 +8,45 @@ import MakeChoiceModal from './MakeChoiceModal';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Sound from 'react-native-sound';
 import { useAppSelector } from 'src/redux/hooks';
+import { useGetSpecificStoryQuery } from 'src/redux/features/storyPromt/storyPromtApi';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from 'src/types/navigationPage';
 
 const { width: screenWidth } = Dimensions.get('window');
 
-const ReadStory = () => {
+type Props={
+  navigation:StackNavigationProp<RootStackParamList,"Read Story">
+}
+type ReadStoryRouteProp = RouteProp<RootStackParamList, "Read Story">;
+
+const ReadStory = ({navigation}:Props) => {
+    const route=useRoute<ReadStoryRouteProp>();
+    const {id}=route.params || {}
     const { width } = useWindowDimensions()
-    const navigation = useNavigation();
     const [showModal, setShowModal] = useState(false);
     const allInfo = useAppSelector((state) => state.storyPromt.info)
     const [volume, setVolume] = useState(0.5);
     const [playNpause, setPlayNpause] = useState(false)
     const [currentTime, setCurrentTime] = useState(0);
     const [sound, setSound] = useState<string | null>(null);
+    const [mkeCoice, setMakeCoice] = useState();
+    const [stId, setStId] = useState(null);
+    const [data,setData]=useState()
     const scrollViewRef = useRef(null);
     let audio = null;
+    
+    const token=useAppSelector((state)=>state.auth.token)
+    const {data:getSpecStory}=useGetSpecificStoryQuery({token,sid:stId})
+
+    useEffect(()=>{
+        if(mkeCoice){
+            setStId(mkeCoice)
+        }else if(id){
+            setStId(id)
+        }else{
+            setStId(null)
+        }
+    },[id,mkeCoice])
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -50,12 +75,13 @@ const ReadStory = () => {
 
     const handleModal = () => {
         setShowModal(true);
+        setData(stId)
     }
 
 
 
     const playAudio = () => {
-        const audio = new Sound(`${allInfo?.audio_url}`, null, (error) => {
+        const audio = new Sound(`${allInfo?.audio_url?allInfo?.audio_url:getSpecStory?.data?.audio_url}`, null, (error) => {
             if (error) {
                 // console.log('Failed to load the sound:', error);
                 return;
@@ -149,19 +175,18 @@ const ReadStory = () => {
         <SafeAreaView className='bg-white flex-1'>
             <View className='flex-row justify-between p-2'>
                 <TouchableOpacity className='flex-row gap-2 items-center bg-[#F3E8FF] rounded-full justify-center' onPress={() => navigation.goBack()}>
-                    <Feather name="arrow-left-circle" size={24} color="#9333EA" />
+                    <Feather name="arrow-left-circle" size={34} color="#9333EA" />
 
                 </TouchableOpacity>
 
 
-                <TouchableOpacity>
-                    <Text className='text-[#7E22CE] font-interMedium'>Emotion Mode</Text>
-                </TouchableOpacity>
+                
             </View>
+            <ScrollView>
 
             <View className='flex-1'>
                 <View style={{ height: verticalScale(280) }} className='items-center justify-center'>
-                    <Image source={{ uri: `${allInfo?.image_url}` }} style={{ width: "100%", height: "100%" }} />
+                    {getSpecStory?.data?.image_url?<Image source={{ uri: `${getSpecStory?.data?.image_url}` }} style={{ width: "100%", height: "100%" }} />:<Image source={{ uri: `${allInfo?.image_url}` }} style={{ width: "100%", height: "100%" }} />}
                 </View>
 
                 <View className='p-3'>
@@ -198,16 +223,17 @@ const ReadStory = () => {
                         minimumTrackTintColor="#0075FF"
                         maximumTrackTintColor="#B7B5B5"
                     />
-                    <ScrollView ref={scrollViewRef} contentContainerStyle={{ paddingBottom: 550 }}> <Text className='text-[#1F2937] mt-2 mb-2 text-xl'>{allInfo?.text}</Text></ScrollView>
+                    <ScrollView ref={scrollViewRef} contentContainerStyle={{ paddingBottom: 550 }}> <Text className='text-[#1F2937] mt-2 mb-2 text-xl'>{allInfo?.text?allInfo?.text:getSpecStory?.data?.text}</Text></ScrollView>
 
                 </View>
             </View>
             <View className='flex-row justify-between p-3  px-5 mx-5 gap-4 bg-white' >
                 <TouchableOpacity className='border border-[#E9D5FF] p-4 rounded-lg items-center flex-1 justify-center'><Text className='text-[#7E22CE]'>Back</Text></TouchableOpacity>
                 <TouchableOpacity className='border border-[#E9D5FF] p-4 rounded-lg items-center bg-[#667EEA] flex-1 justify-center' onPress={handleModal}><Text className='text-white'>Make a Choice</Text></TouchableOpacity>
-                <TouchableOpacity className='border border-[#E9D5FF] p-4 rounded-lg items-center flex-1 justify-center' onPress={() => navigation.navigate("Story Complete View")}><Text className='text-[#7E22CE]'>Next</Text></TouchableOpacity>
+                <TouchableOpacity className='border border-[#E9D5FF] p-4 rounded-lg items-center flex-1 justify-center' onPress={() => navigation.navigate("Story Complete View",{info:allInfo?.text?allInfo?.text:getSpecStory?.data?.text})}><Text className='text-[#7E22CE]'>Next</Text></TouchableOpacity>
             </View>
-            <MakeChoiceModal visible={showModal} onClose={() => setShowModal(false)} />
+            </ScrollView>
+            <MakeChoiceModal visible={showModal} onClose={() => setShowModal(false)} data={data} setMakeCoice={setMakeCoice}/>
         </SafeAreaView>
     )
 }

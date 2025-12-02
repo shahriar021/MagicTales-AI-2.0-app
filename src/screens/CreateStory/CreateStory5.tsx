@@ -7,10 +7,14 @@ import Slider from '@react-native-community/slider';
 import { lengthType } from './demo';
 import { useDispatch } from 'react-redux';
 import { setLength } from 'src/redux/features/storyPromt/storyPromtSlice';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from 'src/types/navigationPage';
 
-const CreateStory5 = () => {
+type Props={
+  navigation:StackNavigationProp<RootStackParamList,"create story 5">
+}
 
-    const navigation = useNavigation()
+const CreateStory5 = ({navigation}:Props) => {
     const [islangMode, setIsLanMode] = useState(false);
     const [voiceItems] = useState(Array.from({ length: 10 }, (_, x) => x + 1));
     const [selectedItem,setSelectedItem]=useState('')

@@ -1,6 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { StoryInfo } from "src/types/ViewStory";
 
-const initialState = {
+interface StoryPromptState {
+  hero: {
+    child_name: string | null;
+    age: number | null;
+    pronouns: string | null;
+    favorite_animal: string | null;
+    favorite_color: string | null;
+  };
+  theme: string | null;
+  art_style: string | null;
+  language: string | null;
+  voice: string | null;
+  length: string | null;
+  info: StoryInfo | null;
+}
+
+
+const initialState:StoryPromptState = {
     hero: {
         child_name: null,
         age: null,

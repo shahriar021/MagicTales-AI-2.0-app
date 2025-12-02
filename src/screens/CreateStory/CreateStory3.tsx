@@ -1,23 +1,26 @@
 import { View, Text, TouchableOpacity, ScrollView, Image, ActivityIndicator } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import * as Progress from "react-native-progress";
 import { scale } from 'react-native-size-matters';
-import { storyCards } from './demo';
 import { useDispatch } from 'react-redux';
 import { setArtStyle } from 'src/redux/features/storyPromt/storyPromtSlice';
 import { useAppSelector } from 'src/redux/hooks';
 import { useGetGenerateOptQuery } from 'src/redux/features/generateOptions/generateOptApi';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from 'src/types/navigationPage';
+import { createStory } from 'src/types/createStory';
 
-const CreateStory3 = () => {
-  const navigation = useNavigation()
+type Props={
+  navigation:StackNavigationProp<RootStackParamList,"create story 3">
+}
+
+const CreateStory3 = ({navigation}:Props) => {
   const [artStyle, setArtStyleState] = useState('');
 
   const dispatch = useDispatch();
   const token = useAppSelector((state) => state.auth.token)
   const { data: genarateOptions, isLoading } = useGetGenerateOptQuery(token)
-  console.log(genarateOptions?.data?.art_styles,"3")
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -44,6 +47,7 @@ const CreateStory3 = () => {
     navigation.navigate("create story 4")
   }
 
+
   return (
     <View className='p-3 flex-1 bg-[#f2f2f2]'>
 
@@ -57,7 +61,7 @@ const CreateStory3 = () => {
 
         <View>
 
-          {isLoading?<ActivityIndicator size={"small"} color={"green"}/>:genarateOptions?.data?.art_styles.map(item => <TouchableOpacity key={item.id} className={`bg-[#fff] p-3 items-center rounded-xl overflow-hidden gap-2 mt-2 mb-2 ${artStyle == item.id ? "border-4 border-red-100" : ""}`} style={{ width: scale(300) }} onPress={() => setArtStyleState(item.id)}>
+          {isLoading?<ActivityIndicator size={"small"} color={"green"}/>:genarateOptions?.data?.art_styles.map((item:createStory) => <TouchableOpacity key={item.id} className={`bg-[#fff] p-3 items-center rounded-xl overflow-hidden gap-2 mt-2 mb-2 ${artStyle == item.id ? "border-4 border-red-100" : ""}`} style={{ width: scale(300) }} onPress={() => setArtStyleState(item.id)}>
             <Image source={{uri:item.image_url}} style={{width:"100%",height:150}} resizeMode='cover'/>
 
             <Text className='text-[#1F2937] font-interSemiBold text-xl '>{item.name}</Text>

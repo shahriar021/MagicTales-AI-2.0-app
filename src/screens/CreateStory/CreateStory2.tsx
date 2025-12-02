@@ -10,10 +10,15 @@ import { useDispatch } from 'react-redux';
 import { setTheme } from 'src/redux/features/storyPromt/storyPromtSlice';
 import {  CatStaticData } from './demo';
 import { useGetGenerateOptQuery } from 'src/redux/features/generateOptions/generateOptApi';
+import { RootStackParamList } from 'src/types/navigationPage';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const CreateStory2 = () => {
+type Props={
+    navigation:StackNavigationProp<RootStackParamList,"create story 2">
+}
+
+const CreateStory2 = ({navigation}:Props) => {
     const dispatch = useDispatch()
-    const navigation = useNavigation()
     const [showModal, setShowModal] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState(null);
     const token = useAppSelector((state)=>state.auth.token)

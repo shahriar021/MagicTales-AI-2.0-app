@@ -9,10 +9,15 @@ import { useDispatch } from 'react-redux';
 import { setLanguage,setVoice } from 'src/redux/features/storyPromt/storyPromtSlice';
 import { useAppSelector } from 'src/redux/hooks';
 import { useGetGenerateOptQuery } from 'src/redux/features/generateOptions/generateOptApi';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from 'src/types/navigationPage';
 
-const CreateStory4 = () => {
+type Props={
+  navigation:StackNavigationProp<RootStackParamList,"create story 4">
+}
+
+const CreateStory4 = ({navigation}:Props) => {
     const dispatch = useDispatch()
-    const navigation = useNavigation()
     const [islangMode, setIsLanMode] = useState(false);
     const [voiceItems] = useState(Array.from({ length: 10 }, (_, x) => x + 1));
     const [isSelectLan, setIsSelectLan] = useState(false)

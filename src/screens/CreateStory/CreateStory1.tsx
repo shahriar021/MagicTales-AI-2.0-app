@@ -1,14 +1,17 @@
 import { View, Text, TouchableOpacity, ScrollView, TextInput, Image, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import {  Feather } from '@expo/vector-icons';
 import * as Progress from "react-native-progress";
 import { useDispatch } from 'react-redux';
 import { setHeroDetails } from "src/redux/features/storyPromt/storyPromtSlice"
-import { useAppSelector } from 'src/redux/hooks';
+import { RootStackParamList } from 'src/types/navigationPage';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const CreateStory1 = () => {
-    const navigation = useNavigation()
+type Props ={
+  navigation:StackNavigationProp<RootStackParamList,"create story 1">
+}
+
+const CreateStory1 = ({navigation}:Props) => {
     const [childName, setChildName] = useState('')
     const [age, setAge] = useState('')
     const [selectPronoun, isSelectPronoun] = useState("she/her");

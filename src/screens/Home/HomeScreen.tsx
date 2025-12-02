@@ -1,14 +1,11 @@
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import {
   View,
-  ScrollView,
   Image,
   Dimensions,
   Text,
   TouchableOpacity,
-  Animated,
   ActivityIndicator,
 } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
@@ -17,13 +14,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppSelector } from "src/redux/hooks";
 import { useGetProfileQuery } from "src/redux/features/Profile/profileApi";
 import { useDispatch } from "react-redux";
-import { setEmail, setFirstName, setLastName, setProPic } from "src/redux/features/Profile/profileSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useBooleanContext } from "src/context/useProfileProviderContext";
+import { RootStackParamList } from "src/types/navigationPage";
+import { StackNavigationProp } from "@react-navigation/stack";
+
+type Props ={
+  navigation:StackNavigationProp<RootStackParamList,"Home">
+}
 
 const { width } = Dimensions.get("screen");
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}:Props) => {
   const dispatch=useDispatch();
   const token  = useAppSelector((state)=>state.auth.token)
     const {data,isLoading}=useGetProfileQuery(token)
@@ -50,7 +52,6 @@ const HomeScreen = () => {
     
   }, [token, data,value]); 
 
-  const navigation = useNavigation();
 
   return (
     <LinearGradient colors={["#FFF7ED", "#FDF2F8", "#F3E8FF"]} start={{ x: 0, y: 0 }}

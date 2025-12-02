@@ -24,9 +24,10 @@ import ViewStory from "src/screens/Library/ViewStory";
 import ReadStory from "src/screens/Library/ReadStory";
 import StoryCompleteView from "src/screens/Library/StoryCompleteView";
 import ChoosePlan from "src/screens/Billing/ChoosePlan";
+import { RootStackParamList } from "src/types/navigationPage";
 
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigation = () => {
   const userType = useAppSelector((store)=>store.auth.userType)

@@ -6,9 +6,14 @@ import * as Progress from "react-native-progress";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppSelector } from 'src/redux/hooks';
 import { useCreateStoryMutation } from 'src/redux/features/storyPromt/storyPromtApi';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from 'src/types/navigationPage';
 
-const CreateStory6 = () => {
-    const navigation = useNavigation()
+type Props={
+  navigation:StackNavigationProp<RootStackParamList,"create story 6">
+}
+
+const CreateStory6 = ({navigation}:Props) => {
     const [islangMode, setIsLanMode] = useState(false);
     const [voiceItems] = useState(Array.from({ length: 10 }, (_, x) => x + 1));
     const [loading,setLoading]=useState(false)
@@ -42,7 +47,6 @@ const CreateStory6 = () => {
     const lenght = useAppSelector((state) => state.storyPromt.length)
     const token = useAppSelector((state) => state.auth.token);
 
-    // console.log("hero :", hero.age, "theme :", theme, "art style: ", art_style, "language :", language, "length", lenght, "app info promt")
 
     const handleGenerate = async () => {
         setLoading(true)

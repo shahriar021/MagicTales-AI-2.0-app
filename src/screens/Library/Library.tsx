@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Image, ActivityIndicator } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,45 +7,24 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { scale, verticalScale } from 'react-native-size-matters';
 import { useLibraryListQuery } from 'src/redux/features/storyPromt/storyPromtApi';
 import { useAppSelector } from 'src/redux/hooks';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from 'src/types/navigationPage';
 
-const Library = () => {
-  const navigation = useNavigation();
-  const [galleryList] = useState(Array.from({ length: 16 }, (_, a) => a + 1))
-  const token=useAppSelector((state)=>state.auth.token)
-  const {data, error, isLoading}=useLibraryListQuery(token)
-if (isLoading) {
-  console.log("Loading data...");
-} else if (error) {
-  console.log("Error fetching library list:", error);
-} else {
-  console.log("Library list data:", data);
+type Props={
+  navigation:StackNavigationProp<RootStackParamList,"Read Story">
 }
 
-  const galleryColors = {
-    1: require("../../../assets/magic/lb1.png"),
-    2: require("../../../assets/magic/lb2.png"),
-    3: require("../../../assets/magic/lb3.png"),
-    4: require("../../../assets/magic/lb4.png"),
-    5: require("../../../assets/magic/lb1.png"),
-    6: require("../../../assets/magic/lb1.png"),
-    7: require("../../../assets/magic/lb1.png"),
-    8: require("../../../assets/magic/lb1.png"),
-    9: require("../../../assets/magic/lb1.png"),
-    10: require("../../../assets/magic/lb1.png"),
-    11: require("../../../assets/magic/lb1.png"),
-    12: require("../../../assets/magic/lb1.png"),
-    13: require("../../../assets/magic/lb1.png"),
-    14: require("../../../assets/magic/lb1.png"),
-    15: require("../../../assets/magic/lb1.png"),
-    16: require("../../../assets/magic/lb1.png"),
-  }
-
+const Library = ({navigation}:Props) => {
+  const [galleryList] = useState(Array.from({ length: 16 }, (_, a) => a + 1))
+  const token = useAppSelector((state) => state.auth.token)
+  const { data: getLibData, error, isLoading } = useLibraryListQuery(token)
   const [selected, setSelected] = useState('All');
 
   return (
     <LinearGradient colors={["#fff", "#FCE7F3", "#DBEAFE"]} start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }} style={{ flex: 1 }}>
       <SafeAreaView className=' flex-1 p-3'>
+        
         <View className='flex-row items-center justify-between w-full mt-2 mb-5'>
           <TouchableOpacity className='bg-white w-[40] h-[40] overflow-hidden rounded-full items-center justify-center' onPress={() => navigation.goBack()}>
             <AntDesign name="arrowleft" size={20} color="black" />
@@ -95,20 +74,17 @@ if (isLoading) {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
+          {isLoading&&<ActivityIndicator size={"large"} color={"blue"}/>}
 
-
-          <View className='flex-row flex-wrap w-full  items-center justify-center mt-2 mb-4 gap-2'>
-            {galleryList?.map(item => <View key={item} style={{ width: "49%" }} className='bg-white rounded-lg overflow-hidden'>
+          <View className='flex-row flex-wrap w-full  items-center  mt-2 mb-4 gap-2'>
+            {getLibData?.data?.results?.map(item => <TouchableOpacity key={item.id} style={{ width: "49%" }} className='bg-white rounded-lg overflow-hidden' onPress={()=>navigation.navigate("Read Story",{id:item?.id})}>
               <View style={{ width: "100%", height: 200, alignItems: "center", justifyContent: "center", borderRadius: 10 }}>
-                <Image source={galleryColors[item]} style={{ width: "100%", height: "100%" }} />
-
+                <Image source={{ uri: item?.image_url }} style={{ width: "100%", height: "100%" }} resizeMode='cover' />
               </View>
-              <View className='p-2'><Text className='mt-1 mb-1 font-interSemiBold text-[#000]'>Emma's Magical Adventure</Text>
-                <Text className='font-interRegular mb-2 text-[#6B7280]'>Jan 15, 2025</Text></View>
-            </View>)}
+              <View className='p-2'><Text className='mt-1 mb-1 font-interSemiBold text-[#000]'>{item?.title}</Text>
+                <Text className='font-interRegular mb-2 text-[#6B7280]'>{new Date(item?.created_at).toLocaleDateString()}</Text></View>
+            </TouchableOpacity>)}
           </View>
-
-
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
