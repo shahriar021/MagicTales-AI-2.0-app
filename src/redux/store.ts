@@ -16,11 +16,6 @@ const authPersistConfig = {
   storage: AsyncStorage,
 };
 
-const notificationPersistConfig = {
-  key: "dormitory-notification",
-  storage: AsyncStorage,
-};
-
 const rootReducer = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
   picker: pickerReducer,

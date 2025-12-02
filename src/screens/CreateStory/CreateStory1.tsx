@@ -55,8 +55,6 @@ const CreateStory1 = ({navigation}:Props) => {
     }
 
 
-
-
     return (
         <View className='p-3 flex-1'>
 
